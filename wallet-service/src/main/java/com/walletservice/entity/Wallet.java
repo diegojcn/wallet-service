@@ -1,25 +1,28 @@
 package com.walletservice.entity;
 
 import jakarta.persistence.*;
-import java.math.BigDecimal;
 
-@Entity
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.List;
+
+@Entity(name = "Wallet")
 @NamedNativeQuery(
-        name = "findbyowner",
-        query =
-                "SELECT   * " +
-                        "FROM Wallet " +
-                        "where owner = :owner ",
+        name = "findByOwner",
+        query = "SELECT id,owner, balance FROM wallet where owner = :owner",
         resultClass = Wallet.class
 )
-public class Wallet {
+public class Wallet implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id")
+    private String id;
 
+    @Column(name = "owner")
     private String owner;
 
+    @Column(name = "balance")
     private BigDecimal balance = BigDecimal.ZERO;
 
     public Wallet(){}
@@ -29,11 +32,11 @@ public class Wallet {
     }
 
     // Getters and setters
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -52,4 +55,5 @@ public class Wallet {
     public void setBalance(BigDecimal balance) {
         this.balance = balance;
     }
+
 }

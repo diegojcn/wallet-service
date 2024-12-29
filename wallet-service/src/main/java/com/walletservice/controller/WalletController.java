@@ -1,10 +1,14 @@
 package com.walletservice.controller;
 
 import com.walletservice.controller.domain.WalletResponse;
+import com.walletservice.entity.TransactionType;
+import com.walletservice.entity.WalletTransaction;
+import com.walletservice.repository.WalletTransactionWrapped;
 import com.walletservice.service.WalletService;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/wallet")
@@ -14,11 +18,6 @@ public class WalletController {
 
     public WalletController(WalletService walletService) {
         this.walletService = walletService;
-    }
-
-    @GetMapping("/teste")
-    public String getTest() {
-        return "Teste";
     }
 
     @PostMapping("/createWallet")
@@ -31,22 +30,29 @@ public class WalletController {
         return walletService.getBalance(owner);
     }
 
-    @PostMapping("deposit")
-    public WalletResponse deposit(@RequestParam("walletId") Long walletId,
+    @GetMapping("/historical-balance")
+    public List<WalletTransactionWrapped> getHistoricalBalance(@RequestParam("owner") String owner,
+                                                               @RequestParam("startDate") String startDate,
+                                                               @RequestParam("endDate") String endDate) {
+        return walletService.getHistoricalTransaction(owner, startDate, endDate);
+    }
+
+    @PostMapping("/deposit")
+    public WalletResponse deposit(@RequestParam("owner") String owner,
                                   @RequestParam("amount") BigDecimal amount) {
-        return walletService.deposit(walletId, amount);
+        return walletService.deposit(owner, amount, null, null);
     }
 
     @PostMapping("/withdraw")
-    public WalletResponse withdraw(@RequestParam("walletId") Long walletId,
+    public WalletResponse withdraw(@RequestParam("owner") String owner,
                                    @RequestParam("amount") BigDecimal amount) {
-        return walletService.withdraw(walletId, amount);
+        return walletService.withdraw(owner, amount, TransactionType.WITHDRAW, null);
     }
 
     @PostMapping("/transfer")
-    public void transfer(@RequestParam("fromWalletId") Long fromWalletId,
-                         @RequestParam("toWalletId") Long toWalletId,
+    public void transfer(@RequestParam("fromOwner") String fromOwner,
+                         @RequestParam("toOwner") String toOwner,
                          @RequestParam("amount") BigDecimal amount) {
-        walletService.transfer(fromWalletId, toWalletId, amount);
+        walletService.transfer(fromOwner, toOwner, amount);
     }
 }

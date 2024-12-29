@@ -8,6 +8,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 public interface WalletRepository extends JpaRepository<Wallet, Long> {
-    @Query(name = "findbyowner", nativeQuery = true)
+    @Query(name = "findByOwner", nativeQuery = true)
     Optional<Wallet> findByOwner(@Param("owner") String owner);
 }
