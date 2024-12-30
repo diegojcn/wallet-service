@@ -1,0 +1,18 @@
+stages:
+  - build
+
+Build:
+  stage: build
+  image: maven:3-jdk-21
+  script: mvn install -B
+  artifacts:
+    when: always
+    expire_in: 1 days
+    paths:
+      - build/libs/*.jar
+      - build/test-results/test/*.xml
+    reports:
+      junit:
+        - build/test-results/test/*.xml
+  only:
+    - main
