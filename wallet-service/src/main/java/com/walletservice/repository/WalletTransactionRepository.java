@@ -11,8 +11,8 @@ import java.util.Optional;
 public interface WalletTransactionRepository extends JpaRepository<WalletTransaction, Long> {
 
     @Query(name = "transactionsByDate", nativeQuery = true)
-    Optional<List<WalletTransactionWrapped>> getTransactionsByDate(@Param("wallet") String wallet,
-                                                                   @Param("startDate") String startDate,
-                                                                   @Param("endDate") String endDate);
+    Optional<List<WalletTransactionItemSummary>> getTransactionsByDate(@Param("wallet") String wallet,
+                                                                       @Param("startDate") String startDate,
+                                                                       @Param("endDate") String endDate);
 
 }

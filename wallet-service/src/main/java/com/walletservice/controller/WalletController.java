@@ -2,8 +2,8 @@ package com.walletservice.controller;
 
 import com.walletservice.controller.domain.WalletResponse;
 import com.walletservice.entity.TransactionType;
-import com.walletservice.entity.WalletTransaction;
-import com.walletservice.repository.WalletTransactionWrapped;
+import com.walletservice.repository.WalletTransactionItemSummary;
+import com.walletservice.repository.WalletTransactionSummary;
 import com.walletservice.service.WalletService;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,9 +31,9 @@ public class WalletController {
     }
 
     @GetMapping("/historical-balance")
-    public List<WalletTransactionWrapped> getHistoricalBalance(@RequestParam("owner") String owner,
-                                                               @RequestParam("startDate") String startDate,
-                                                               @RequestParam("endDate") String endDate) {
+    public WalletTransactionSummary getHistoricalBalance(@RequestParam("owner") String owner,
+                                                         @RequestParam("startDate") String startDate,
+                                                         @RequestParam("endDate") String endDate) {
         return walletService.getHistoricalTransaction(owner, startDate, endDate);
     }
 

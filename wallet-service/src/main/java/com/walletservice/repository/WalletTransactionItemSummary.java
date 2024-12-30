@@ -3,7 +3,7 @@ package com.walletservice.repository;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public class WalletTransactionWrapped {
+public class WalletTransactionItemSummary {
 
     private BigDecimal balance;
 

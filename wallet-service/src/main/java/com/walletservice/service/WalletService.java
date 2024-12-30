@@ -6,7 +6,8 @@ import com.walletservice.entity.TransactionType;
 import com.walletservice.entity.Wallet;
 import com.walletservice.repository.WalletRepository;
 import com.walletservice.repository.WalletTransactionRepository;
-import com.walletservice.repository.WalletTransactionWrapped;
+import com.walletservice.repository.WalletTransactionItemSummary;
+import com.walletservice.repository.WalletTransactionSummary;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -83,14 +84,15 @@ public class WalletService {
     }
 
 
-    public List<WalletTransactionWrapped> getHistoricalTransaction(String owner, String startDate, String endDate) {
+    public WalletTransactionSummary getHistoricalTransaction(String owner, String startDate, String endDate) {
         Wallet wallet = getWalletByOwner(owner);
 
-        return walletTransactionRepository.getTransactionsByDate(
-                        wallet.getId(),
-                        startDate.concat("T00:00:00.00"),
-                        endDate.concat("T23:59:59.999"))
-                .orElseThrow(() -> new IllegalArgumentException("Wallet not found"));
+       return new WalletTransactionSummary(walletTransactionRepository.getTransactionsByDate(
+                       wallet.getId(),
+                       startDate.concat("T00:00:00.00"),
+                       endDate.concat("T23:59:59.999"))
+               .orElseThrow(() -> new IllegalArgumentException("Wallet not found")));
+
     }
 
 }

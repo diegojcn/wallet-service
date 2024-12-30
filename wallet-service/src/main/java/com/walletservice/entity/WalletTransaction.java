@@ -1,6 +1,6 @@
 package com.walletservice.entity;
 
-import com.walletservice.repository.WalletTransactionWrapped;
+import com.walletservice.repository.WalletTransactionItemSummary;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -10,11 +10,23 @@ import java.time.LocalDateTime;
 @Entity(name = "wallet_transaction")
 @NamedNativeQuery(
         name = "transactionsByDate",
-        query = "SELECT balance, transaction_value, transaction_date, type " +
+        query = "SELECT balance, transaction_value AS transactionValue, transaction_date AS transactionDate, type " +
                 "FROM wallet_transaction where wallet = :wallet " +
                 "AND transaction_date BETWEEN :startDate AND :endDate " +
                 "ORDER BY transaction_date DESC",
-        resultClass = WalletTransactionWrapped.class
+        resultSetMapping = "WalletTransactionSummary"
+)
+@SqlResultSetMapping(
+        name = "WalletTransactionSummary",
+        classes = @ConstructorResult(
+                targetClass = WalletTransactionItemSummary.class,
+                columns = {
+                        @ColumnResult(name = "balance", type = BigDecimal.class),
+                        @ColumnResult(name = "type", type = String.class),
+                        @ColumnResult(name = "transactionValue", type = BigDecimal.class),
+                        @ColumnResult(name = "transactionDate", type = LocalDateTime.class)
+                }
+        )
 )
 public class WalletTransaction implements Serializable {
 
